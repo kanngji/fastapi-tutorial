@@ -1,3 +1,7 @@
 {
-  "python.analysis.extraPaths": ["./modules"]
+  "python.analysis.extraPaths": ["./modules"],
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "python.formatting.provider": "none"
 }

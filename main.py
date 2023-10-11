@@ -1,8 +1,8 @@
 from enum import Enum
 from typing import List
-from fastapi import FastAPI, Query,Path,Body
-from pydantic import BaseModel,Field
-from typing import Optional 
+from fastapi import FastAPI, Query, Path, Body, Cookie, Form, File, Header
+from pydantic import BaseModel, Field
+from typing import Optional
 
 app = FastAPI()
 
@@ -18,7 +18,6 @@ app = FastAPI()
 #     full_name: str | None = None
 
 
-
 # @app.put("/items/{item_id}")
 # async def update_item(
 #     *,
@@ -31,7 +30,7 @@ app = FastAPI()
 #     results ={"item_id": item_id}
 #     if q:
 #         results.update({"q": q})
-#     if item: 
+#     if item:
 #         results.update({"item":item})
 #     if user:
 #         results.update({"user":user})
@@ -39,15 +38,6 @@ app = FastAPI()
 #         results.update("importance",importance)
 
 #     return results
-
-
-
-
-
-
-
-
-
 
 
 # @app.get("/")
@@ -96,7 +86,7 @@ app = FastAPI()
 # @app.get("/items")
 # async def read_items(q: str | None = Query(None,min_length=3,max_length=10)):
 #     results = {"items" : [{"item_id":"Foo"},{"item_id":"Bar"}]}
-#     if q: 
+#     if q:
 #         results.update({"q":q})
 #     return results
 
@@ -125,20 +115,49 @@ app = FastAPI()
 #     results = {"item_id": item_id, "item":item}
 #     return results
 
-## part 9 
-class Image(BaseModel):
-    url:str
-    name: str
+## part 9
+# class Image(BaseModel):
+#     url:str
+#     name: str
 
-    
+
+# class Item(BaseModel):
+#     name: str
+#     description: str | None = None
+#     price: float
+#     tax: float | None = None
+#     tags: list[str] = []
+
+# @app.put("items/{item_id}")
+# async def update_item(item_id:int, item:Item):
+#     results = {"item_id": item_id, "item":item}
+#     return results
+
+
+# part 10 -
 class Item(BaseModel):
     name: str
     description: str | None = None
     price: float
     tax: float | None = None
-    tags: list[str] = []
 
-@app.put("items/{item_id}")
-async def update_item(item_id:int, item:Item):
-    results = {"item_id": item_id, "item":item}
+    # class Config:
+    #     json_schema_extra = {
+    #         "example": {
+    #             "name": "Foo",
+    #             "description": "A very nice Item",
+    #             "price": 16.25,
+    #             "tax": 1.67,
+    #         }
+    #     }
+
+
+@app.put("/items/{item_id}")
+async def update_item(
+    item_id: int,
+    item: Item = Body(
+        ..., example={"name": "foo", "dexcription": "gigi", "price": 16.26, "tax": 1.25}
+    ),
+):
+    results = {"item_id": item_id, "item": item}
     return results
